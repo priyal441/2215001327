@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Average Calculator</h2>
+    <input type="text" id="numbers" placeholder="Enter numbers separated by commas">
+    <button onclick="calculateAverage()">Calculate Average</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function calculateAverage() {
+      const input = document.getElementById('numbers').value;
+      const numbers = input.split(',').map(num => parseFloat(num.trim()));
+
+      if (numbers.some(isNaN)) {
+        document.getElementById('result').innerText = 'Please enter valid numbers.';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://20.244.56.144/evaluation-service/primes',
+        'http://20.244.56.144/evaluation-service/fibo',
+        'http://20.244.56.144/evaluation-service/even',
+        'http://20.244.56.144/evaluation-service/rand',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ numbers })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to calculate average');
+        }
+
+        const data = await response.json();
+        document.getElementById('result').innerText = `Average: ${data.average}`;
+      } catch (error) {
+        document.getElementById('result').innerText = 'Error: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
